@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package monedas;
+package currency;
 
 /**
  *
  * @author yuleidyvdres
  */
-public class Monedas {
+public class Currency {
 
     /**
      * @param args the command line arguments
