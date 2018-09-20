@@ -14,12 +14,16 @@ public class Currency {
             try {
                 BufferedReader input = new BufferedReader(new FileReader(args[0]));
                 int cases = Integer.parseInt(input.readLine());
+                System.out.println(cases);
                 String line;
                 int amount, cont, acum = 0, maximun = -1;
                 float prom;
                 for (int i = 0; i < cases; i++) {
                     cont = 0;
+                    acum = 0;
+                    prom = 0;
                     line = input.readLine();
+                    System.out.println(line);
                     String [] aux = line.split(" ");
                     /*Save amount per line*/
                     amount = Integer.parseInt(aux[0]);
@@ -30,11 +34,21 @@ public class Currency {
                         denomination[cont] = Integer.parseInt(aux[j]);
                         cont++;
                     }
-                    int [] minimun = min_coins(denomination, amount);
-                    for (int j = 1; j < minimun.length; j++) {
-                        acum+=minimun[j];
-                        System.out.println("Min "+ j +" " + minimun[j]);
+                    int max_amount = amount + max(denomination);
+                    int [] minimun = min_coins(denomination, max_amount);
+                    int min_val;
+                    for (int j = 1; j <= amount; j++) {
+                        min_val = minimun[j];
+                        for (int k = j; k <= max_amount; k++) {
+                            int sub = k - j;
+                            int val = search(minimun, sub);
+                            if(minimun[k] + val < min_val){
+                                min_val = minimun[k] + val;
+                            }
+                        }
+                        acum+=min_val;
                     }
+                    
                     prom = (float)acum/(float)amount;
                     maximun = max(minimun);
                     System.out.println(prom + " " + maximun);
@@ -54,17 +68,22 @@ public class Currency {
     
     public static int [] min_coins(int [] denomination, int amount){
         int [] coins = new int[amount + 1];      
+        int [] copy = new int[amount + 1];      
         int aux;
         /*The first element is filled with 0 and the rest with oo*/
         for (int i = 0; i <= amount; i++) {
-            if(i == 0)
+            if(i == 0){
                 coins[i] = 0;
-            else
+                copy[i] = 0;
+            }
+            else{
                 coins[i] = Integer.MAX_VALUE;
+                copy[i] = Integer.MAX_VALUE;
+            }
         }
         /*For each number in the range [1-N] compare all the denomination coins */
         for (int i = 1; i <= amount; i++) {
-            System.out.println("\n");
+            //System.out.println("\n");
             for (int j = 0; j < denomination.length; j++) {
                 //System.out.println(denomination[j] +" <= "+i);
                 if(denomination[j] <= i){
@@ -76,6 +95,15 @@ public class Currency {
                     }
                 }
             }
+            /*for (int k = 0; k < denomination.length; k++) {
+                if(denomination[k] > i){
+                    int val = search(denomination, denomination[k] - i);
+                    if(val >= 1 && val < coins[i]){
+                        System.out.println("COINSSSSSSS " + coins[i] +" " + val);
+                        coins[i] = val;
+                    }
+                }
+            }*/
         }
         
         return coins;
@@ -90,6 +118,29 @@ public class Currency {
         }
         
         return max_number;
+    }
+    
+    public static int search(int [] array, int value){
+        /*int cont = 0, acum = 0;
+        for (int i = 0; i < array.length; i++) {
+            if(value == array[i]){
+                return 1;
+            }
+            else{
+                acum+=array[i];
+                cont++;
+                if(acum == value){
+                    return cont;
+                }
+            }
+        }
+        return 0;*/
+        for (int i = 1; i <= array.length; i++) {
+            if(value == i)
+                return array[i];
+        }
+        
+        return 0;
     }
     
 }
