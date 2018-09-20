@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +15,9 @@ public class Currency {
     public static void main(String[] args) {
         if(args.length == 1){
             try {
+                DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.getDefault());
+                formatSymbols.setDecimalSeparator('.');
+                DecimalFormat df = new DecimalFormat("###.00", formatSymbols);
                 BufferedReader input = new BufferedReader(new FileReader(args[0]));
                 int cases = Integer.parseInt(input.readLine());
                 String line;
@@ -51,7 +56,6 @@ public class Currency {
                             maximun = min_val;
                     }
                     average = (float)acum/(float)amount;
-                    DecimalFormat df = new DecimalFormat("###.##");
                     System.out.println(df.format(average) + " " + maximun);
                 }
                 
