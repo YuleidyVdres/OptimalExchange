@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,16 +15,14 @@ public class Currency {
             try {
                 BufferedReader input = new BufferedReader(new FileReader(args[0]));
                 int cases = Integer.parseInt(input.readLine());
-                System.out.println(cases);
                 String line;
-                int amount, cont, acum = 0, maximun = -1;
+                int amount, cont, acum = 0;
                 float prom;
                 for (int i = 0; i < cases; i++) {
                     cont = 0;
                     acum = 0;
                     prom = 0;
                     line = input.readLine();
-                    System.out.println(line);
                     String [] aux = line.split(" ");
                     /*Save amount per line*/
                     amount = Integer.parseInt(aux[0]);
@@ -37,6 +36,7 @@ public class Currency {
                     int max_amount = amount + max(denomination);
                     int [] minimun = min_coins(denomination, max_amount);
                     int min_val;
+                    int maximun = -1;
                     for (int j = 1; j <= amount; j++) {
                         min_val = minimun[j];
                         for (int k = j; k <= max_amount; k++) {
@@ -47,12 +47,12 @@ public class Currency {
                             }
                         }
                         acum+=min_val;
+                        if(min_val > maximun)
+                            maximun = min_val;
                     }
-                    
                     prom = (float)acum/(float)amount;
-                    maximun = max(minimun);
-                    System.out.println(prom + " " + maximun);
-                    System.out.println("\n");
+                    DecimalFormat df = new DecimalFormat("###.##");
+                    System.out.println(df.format(prom) + " " + maximun);
                 }
                 
             } catch (FileNotFoundException ex) {
@@ -83,27 +83,15 @@ public class Currency {
         }
         /*For each number in the range [1-N] compare all the denomination coins */
         for (int i = 1; i <= amount; i++) {
-            //System.out.println("\n");
             for (int j = 0; j < denomination.length; j++) {
-                //System.out.println(denomination[j] +" <= "+i);
                 if(denomination[j] <= i){
                     aux = coins[i - denomination[j]];
-                    //System.out.println("aux + 1 "+ aux+" < "+coins[i]);
                     if(aux != Integer.MAX_VALUE && aux + 1 < coins[i]){
                         //Save the actual min
                         coins[i] = aux + 1;
                     }
                 }
             }
-            /*for (int k = 0; k < denomination.length; k++) {
-                if(denomination[k] > i){
-                    int val = search(denomination, denomination[k] - i);
-                    if(val >= 1 && val < coins[i]){
-                        System.out.println("COINSSSSSSS " + coins[i] +" " + val);
-                        coins[i] = val;
-                    }
-                }
-            }*/
         }
         
         return coins;
@@ -121,20 +109,6 @@ public class Currency {
     }
     
     public static int search(int [] array, int value){
-        /*int cont = 0, acum = 0;
-        for (int i = 0; i < array.length; i++) {
-            if(value == array[i]){
-                return 1;
-            }
-            else{
-                acum+=array[i];
-                cont++;
-                if(acum == value){
-                    return cont;
-                }
-            }
-        }
-        return 0;*/
         for (int i = 1; i <= array.length; i++) {
             if(value == i)
                 return array[i];
