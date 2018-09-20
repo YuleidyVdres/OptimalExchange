@@ -17,11 +17,11 @@ public class Currency {
                 int cases = Integer.parseInt(input.readLine());
                 String line;
                 int amount, cont, acum = 0;
-                float prom;
+                float average = 0;
                 for (int i = 0; i < cases; i++) {
                     cont = 0;
                     acum = 0;
-                    prom = 0;
+                    average = 0;
                     line = input.readLine();
                     String [] aux = line.split(" ");
                     /*Save amount per line*/
@@ -35,7 +35,7 @@ public class Currency {
                     }
                     int max_amount = amount + max(denomination);
                     int [] minimun = min_coins(denomination, max_amount);
-                    int min_val;
+                    int min_val = 0;
                     int maximun = -1;
                     for (int j = 1; j <= amount; j++) {
                         min_val = minimun[j];
@@ -50,9 +50,9 @@ public class Currency {
                         if(min_val > maximun)
                             maximun = min_val;
                     }
-                    prom = (float)acum/(float)amount;
+                    average = (float)acum/(float)amount;
                     DecimalFormat df = new DecimalFormat("###.##");
-                    System.out.println(df.format(prom) + " " + maximun);
+                    System.out.println(df.format(average) + " " + maximun);
                 }
                 
             } catch (FileNotFoundException ex) {
@@ -65,21 +65,17 @@ public class Currency {
             System.out.println("You should specify an input file");
         }
     }
-    
+    /*Get the min coins [1-N]*/
     public static int [] min_coins(int [] denomination, int amount){
         int [] coins = new int[amount + 1];      
-        int [] copy = new int[amount + 1];      
         int aux;
         /*The first element is filled with 0 and the rest with oo*/
         for (int i = 0; i <= amount; i++) {
-            if(i == 0){
+            if(i == 0)
                 coins[i] = 0;
-                copy[i] = 0;
-            }
-            else{
+            else
                 coins[i] = Integer.MAX_VALUE;
-                copy[i] = Integer.MAX_VALUE;
-            }
+                
         }
         /*For each number in the range [1-N] compare all the denomination coins */
         for (int i = 1; i <= amount; i++) {
@@ -96,7 +92,7 @@ public class Currency {
         
         return coins;
     }
-    
+    /*Get the max value from an array*/
     public static int max(int [] array){
         int max_number = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -107,7 +103,7 @@ public class Currency {
         
         return max_number;
     }
-    
+    /*Get the number of coins from an amount*/
     public static int search(int [] array, int value){
         for (int i = 1; i <= array.length; i++) {
             if(value == i)
